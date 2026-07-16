@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0f1a" />
+  <title>暗影突擊 · Shadow Strike</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b0f1a'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%2335e0c8' stroke-width='2'/%3E%3Cpath d='M16 5v6M16 21v6M5 16h6M21 16h6' stroke='%2335e0c8' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='2' fill='%23ff5d6c'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- 遊戲畫布 -->
+  <canvas id="game-canvas"></canvas>
+
+  <!-- 準星 -->
+  <div id="crosshair" class="hidden">
+    <span class="ch ch-t"></span>
+    <span class="ch ch-b"></span>
+    <span class="ch ch-l"></span>
+    <span class="ch ch-r"></span>
+    <span class="ch-dot"></span>
+  </div>
+
+  <!-- 命中提示 -->
+  <div id="hitmarker" class="hidden"></div>
+  <!-- 受傷紅屏 -->
+  <div id="damage-vignette"></div>
+
+  <!-- 抬頭顯示 HUD -->
+  <div id="hud" class="hidden">
+    <div id="hud-top">
+      <div class="hud-stat">
+        <span class="stat-label">擊殺</span>
+        <span id="kills" class="stat-value">0</span>
+      </div>
+      <div class="hud-stat">
+        <span class="stat-label">敵人</span>
+        <span id="enemies-left" class="stat-value">0</span>
+      </div>
+      <div class="hud-stat">
+        <span class="stat-label">分數</span>
+        <span id="score" class="stat-value">0</span>
+      </div>
+      <div class="hud-stat">
+        <span class="stat-label">波次</span>
+        <span id="wave" class="stat-value">1</span>
+      </div>
+    </div>
+
+    <div id="hud-bottom-left">
+      <div class="bar-wrap">
+        <span class="bar-icon">❤</span>
+        <div class="bar-bg"><div id="health-fill" class="bar-fill health"></div></div>
+        <span id="health-text" class="bar-text">100</span>
+      </div>
+    </div>
+
+    <div id="hud-bottom-right">
+      <div id="weapon-name">突擊步槍</div>
+      <div id="ammo">
+        <span id="ammo-cur">30</span><span class="ammo-sep">/</span><span id="ammo-reserve">90</span>
+      </div>
+      <div id="reload-hint" class="hidden">換彈中…</div>
+    </div>
+
+    <div id="killfeed"></div>
+  </div>
+
+  <!-- 手機觸控介面 -->
+  <div id="touch-ui" class="hidden">
+    <div id="move-stick" class="stick">
+      <div class="stick-base"><div class="stick-knob"></div></div>
+    </div>
+    <button id="btn-fire" class="tbtn fire">開火</button>
+    <button id="btn-reload" class="tbtn">換彈</button>
+    <button id="btn-jump" class="tbtn">跳</button>
+  </div>
+
+  <!-- 主選單 -->
+  <div id="menu" class="overlay">
+    <div class="menu-card">
+      <h1 class="game-title">暗影突擊</h1>
+      <p class="subtitle">SHADOW STRIKE · 人機對戰</p>
+      <div class="difficulty">
+        <span class="diff-label">難度</span>
+        <div class="diff-btns">
+          <button class="diff-btn" data-diff="easy">簡單</button>
+          <button class="diff-btn active" data-diff="normal">普通</button>
+          <button class="diff-btn" data-diff="hard">困難</button>
+        </div>
+      </div>
+      <button id="btn-start" class="primary-btn">開始戰鬥</button>
+      <div class="controls-help">
+        <p class="ch-title">電腦操作</p>
+        <p>WASD 移動 · 滑鼠瞄準 · 左鍵射擊 · R 換彈 · 空白鍵跳躍 · Shift 衝刺</p>
+        <p class="ch-title">手機操作</p>
+        <p>左側搖桿移動 · 右側滑動瞄準 · 點擊按鈕開火／換彈／跳躍</p>
+      </div>
+      <p class="credit">Three.js WebGL · 支援 Android</p>
+    </div>
+  </div>
+
+  <!-- 暫停選單 -->
+  <div id="pause" class="overlay hidden">
+    <div class="menu-card">
+      <h2>已暫停</h2>
+      <button id="btn-resume" class="primary-btn">繼續</button>
+      <button id="btn-quit" class="ghost-btn">返回主選單</button>
+    </div>
+  </div>
+
+  <!-- 結束畫面 -->
+  <div id="gameover" class="overlay hidden">
+    <div class="menu-card">
+      <h2 id="go-title">任務結束</h2>
+      <div class="go-stats">
+        <div><span class="go-num" id="go-kills">0</span><span class="go-lbl">擊殺</span></div>
+        <div><span class="go-num" id="go-score">0</span><span class="go-lbl">分數</span></div>
+        <div><span class="go-num" id="go-wave">1</span><span class="go-lbl">波次</span></div>
+      </div>
+      <button id="btn-retry" class="primary-btn">再戰一場</button>
+      <button id="btn-menu" class="ghost-btn">返回主選單</button>
+    </div>
+  </div>
+
+  <!-- 載入 -->
+  <div id="loading" class="overlay">
+    <div class="loader-ring"></div>
+    <p>載入中…</p>
+  </div>
+
+  <button id="btn-pause" class="corner-btn hidden">Ⅱ</button>
+
+  <script src="lib/three.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/world.js"></script>
+  <script src="js/weapon.js"></script>
+  <script src="js/bot.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
