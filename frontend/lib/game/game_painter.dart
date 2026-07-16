@@ -1,5 +1,6 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:math' as math;
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
@@ -216,7 +217,8 @@ class NeonDriftPainter extends CustomPainter {
           ..color = const Color(0xFFFFB2D0).withOpacity(.75),
       );
 
-      final craterPaint = Paint()..color = const Color(0xFF321E56).withOpacity(.7);
+      final craterPaint = Paint()
+        ..color = const Color(0xFF321E56).withOpacity(.7);
       canvas.drawCircle(
         Offset(-meteor.radius * .25, -meteor.radius * .18),
         meteor.radius * .18,

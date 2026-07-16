@@ -212,7 +212,8 @@ class NeonDriftEngine {
   void _spawnMeteor() {
     final radius = 16 + _random.nextDouble() * 19;
     final x = radius + _random.nextDouble() * (worldSize.width - radius * 2);
-    final speed = 155 + math.min(230, elapsed * 4.2) + _random.nextDouble() * 70;
+    final speed =
+        155 + math.min(230, elapsed * 4.2) + _random.nextDouble() * 70;
     meteors.add(Meteor(
       position: Offset(x, -radius - 12),
       velocity: Offset((_random.nextDouble() - .5) * 44, speed),
@@ -313,9 +314,8 @@ class NeonDriftEngine {
 
   void _emitThruster(double dt) {
     if (_random.nextDouble() > dt * 55) return;
-    final color = isOverdrive
-        ? const Color(0xFFB36BFF)
-        : const Color(0xFF42F5D7);
+    final color =
+        isOverdrive ? const Color(0xFFB36BFF) : const Color(0xFF42F5D7);
     sparks.add(Spark(
       position: player + Offset((_random.nextDouble() - .5) * 9, 20),
       velocity: Offset(

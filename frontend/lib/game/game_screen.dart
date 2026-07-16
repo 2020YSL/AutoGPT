@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -237,9 +239,9 @@ class _GameScreenState extends State<GameScreen>
             _GlassPanel(
               child: Column(
                 children: <Widget>[
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: const <Widget>[
+                    children: <Widget>[
                       _Feature(
                         icon: Icons.swipe_rounded,
                         title: '拖動',
@@ -748,7 +750,8 @@ class _LogoMark extends StatelessWidget {
           color: Color(0xFF0B1027),
           shape: BoxShape.circle,
         ),
-        child: const Icon(Icons.navigation_rounded, color: Colors.white, size: 32),
+        child:
+            const Icon(Icons.navigation_rounded, color: Colors.white, size: 32),
       ),
     );
   }
