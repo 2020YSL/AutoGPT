@@ -40,13 +40,13 @@ dependencies:
   http: ^1.1.0
   shared_preferences: ^2.2.1
   graphview: ^1.2.0
-  firebase_core: ^2.15.1
-  firebase_auth: ^4.9.0
-  firebase_analytics: ^10.5.0
-  google_sign_in: ^6.1.5
+  firebase_core: ^4.12.1
+  firebase_auth: ^6.5.6
+  firebase_analytics: ^12.4.5
+  google_sign_in: ^7.2.0
   uuid: ^4.0.0
   url_launcher: ^6.1.14
-  fluttertoast: ^8.2.2
+  fluttertoast: ^9.1.0
 
 dev_dependencies:
   flutter_test:
@@ -57,7 +57,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
